@@ -6,27 +6,19 @@ public:
         backtrack(candidates,result,curr,target,0);
         return result;
     }
-    int sum(vector<int>&nums){
-        int s=0;
-        for(auto num:nums){
-            s+=num;
-        }
-        return s;
-    }
 private:
-    void backtrack(vector<int>& candidates,vector<vector<int>> &result,vector<int>&curr,int target,int index){
-       
-        if(sum(curr) == target){
+    void backtrack(vector<int>& candidates, vector<vector<int>>& result, vector<int>& curr, int target, int index) {
+        if (target == 0) {
             result.push_back(curr);
             return;
         }
-        for(int i= index;i<candidates.size();++i){
-            if(sum(curr)<target){
-                curr.push_back(candidates[i]);
-                backtrack(candidates,result,curr,target,i);
-                curr.pop_back();
-            }
+        if (target < 0) return; // Base case stopping condition
 
+        for (int i = index; i < candidates.size(); ++i) {
+            curr.push_back(candidates[i]);
+            // Subtract candidates[i] directly -> O(1) state transition
+            backtrack(candidates, result, curr, target - candidates[i], i);
+            curr.pop_back();
         }
     }
 };

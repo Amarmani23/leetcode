@@ -5,22 +5,21 @@ public:
         // int n=distance(nums.begin(),result);
         // return n;
 
-        //M-2
+        //M-2  binary serach
         int n=nums.size();
         int left=0;
-        int result=0;
+        
         int right=n-1;
         while(left<=right){
             int mid=left+(right-left)/2;
             if(nums[mid]==target){
-                return result=mid;
+                return mid;
             }else if(nums[mid]>target){
                 right=mid-1;
             }else{
                 left=mid+1;
             }
-            result=left;
         }
-        return result;
+        return left;
     }
 };

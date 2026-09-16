@@ -1,0 +1,9 @@
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        if(n<5) return 0;
+        int ans=n/5;
+        ans+=trailingZeroes(ans);
+        return ans;
+    }
+};

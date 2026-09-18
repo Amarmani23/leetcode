@@ -21,27 +21,51 @@
  */
 class Solution {
 public:
-    TreeNode* solve(int low,int high,ListNode* &curr){
-        if(low>high){
-            return NULL;
-        }
-        int mid=low+(high-low)/2;
+    // TreeNode* solve(int low,int high,ListNode* &curr){
+    //     if(low>high){
+    //         return NULL;
+    //     }
+    //     int mid=low+(high-low)/2;
 
-        TreeNode* leftNode=solve(low,mid-1,curr);
-        TreeNode* root=new TreeNode(curr->val);
-        root->left=leftNode;
-        curr=curr->next;
-        root->right=solve(mid+1,high,curr);
+    //     TreeNode* leftNode=solve(low,mid-1,curr);
+    //     TreeNode* root=new TreeNode(curr->val);
+    //     root->left=leftNode;
+    //     curr=curr->next;
+    //     root->right=solve(mid+1,high,curr);
+    //     return root;
+
+    // }
+    // TreeNode* sortedListToBST(ListNode* head) {
+    //     ListNode* curr=head;
+    //     int count=0;
+    //     while(curr!=nullptr){
+    //         count++;
+    //         curr=curr->next;
+    //     }
+    //     return solve(0,count-1,head);
+    // }
+
+
+// by slow and fast pointer
+
+    TreeNode* convertBst(ListNode* start,ListNode* end){
+        if(start==end){
+            return nullptr;
+        }
+        ListNode* slow=start;
+        ListNode* fast=start;
+        while(fast != end && fast->next != end){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        TreeNode* root=new TreeNode(slow->val);
+        root->left=convertBst(start,slow);
+        root->right=convertBst(slow->next,end);
         return root;
-
     }
+
     TreeNode* sortedListToBST(ListNode* head) {
-        ListNode* curr=head;
-        int count=0;
-        while(curr!=nullptr){
-            count++;
-            curr=curr->next;
-        }
-        return solve(0,count-1,head);
+       
+        return convertBst(head,nullptr);
     }
 };

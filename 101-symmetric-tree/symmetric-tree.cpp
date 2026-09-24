@@ -9,28 +9,43 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+// class Solution {
+// public:
+//     bool isSymmetric(TreeNode* root) {
+//         if (!root) return true;
+//         return isMirror(root->left, root->right);
+//     }
+
+// private:
+//     bool isMirror(TreeNode* l1,TreeNode* l2){
+//         if(!l1 && !l2) return true;
+//         if(!l1 || !l2) return false;
+//         if(l1->val != l2->val) return false;
+
+//         return isMirror(l1->left,l2->right) && isMirror(l1->right,l2->left);
+//     }
+// };
+
+
 class Solution {
 public:
-    bool isSymmetric(TreeNode* root) {
-        // An empty tree is always symmetric
-        if (!root) return true;
-        
-        // Compare the left subtree and the right subtree
-        return isMirror(root->left, root->right);
-    }
+    bool isSymmetric(TreeNode* root){
+        if(!root) return true;
+        queue<TreeNode*>q;
+        q.push(root->left);
+        q.push(root->right);
+        while(!q.empty()){
+            TreeNode* t1=q.front();q.pop();
+            TreeNode* t2=q.front();q.pop();
 
-private:
-    bool isMirror(TreeNode* t1, TreeNode* t2) {
-        // Base case: both nodes are null, meaning they match perfectly
-        if (!t1 && !t2) return true;
-        
-        // If only one node is null, or their values don't match, they aren't mirrors
-        if (!t1 || !t2) return false;
-        if (t1->val != t2->val) return false;
-        
-        // Recursively check:
-        // 1. Left child of t1 vs Right child of t2
-        // 2. Right child of t1 vs Left child of t2
-        return isMirror(t1->left, t2->right) && isMirror(t1->right, t2->left);
+            if(!t1 && !t2) continue;
+            if(!t1 || !t2) return false;
+            if(t1->val != t2->val){
+                return false;
+            }
+            q.push(t1->left);q.push(t2->right);
+            q.push(t1->right);q.push(t2->left);
+        }
+        return true;
     }
 };

@@ -1,7 +1,51 @@
+// class RideSharingSystem {
+//     queue<int>rider;
+//     queue<int>driver;
+//     bool activeRider[1001]={false};
+
+// public:
+//     RideSharingSystem() {
+        
+//     }
+    
+//     void addRider(int riderId) {
+//         rider.push(riderId);
+//         activeRider[riderId]=true;
+//     }
+    
+//     void addDriver(int driverId) {
+//         driver.push(driverId);
+//     }
+    
+//     vector<int> matchDriverWithRider() {
+//         while(!rider.empty() && !activeRider[rider.front()]){
+//             rider.pop();
+//         }
+//         if(rider.empty() || driver.empty()){
+//             return {-1,-1};
+//         }
+//         int driverId=driver.front();
+//         int riderId=rider.front();
+
+//         driver.pop();
+//         rider.pop();
+//         return {driverId,riderId};
+//     }
+    
+//     void cancelRider(int riderId) {
+//         activeRider[riderId]=false;
+//     }
+// };
+
+
+//using set and hashmap with monotonaccally incresing timestamp
+
 class RideSharingSystem {
-    queue<int>rider;
-    queue<int>driver;
-    bool activeRider[1001]={false};
+private:
+    int timestamp=0;
+    set<pair<int,int>>rider;
+    set<pair<int,int>>driver;
+    unordered_map<int,int> riderTime;
 
 public:
     RideSharingSystem() {
@@ -9,31 +53,35 @@ public:
     }
     
     void addRider(int riderId) {
-        rider.push(riderId);
-        activeRider[riderId]=true;
+        int t=timestamp++;
+        rider.insert({t,riderId});
+        riderTime[riderId]=t;
     }
     
     void addDriver(int driverId) {
-        driver.push(driverId);
+        driver.insert({timestamp++,driverId});
     }
     
     vector<int> matchDriverWithRider() {
-        while(!rider.empty() && !activeRider[rider.front()]){
-            rider.pop();
-        }
         if(rider.empty() || driver.empty()){
             return {-1,-1};
         }
-        int driverId=driver.front();
-        int riderId=rider.front();
+        auto[rTime,riderId]= *rider.begin();
+        auto[dTime,driverId]=*driver.begin();
 
-        driver.pop();
-        rider.pop();
+        rider.erase(rider.begin());
+        driver.erase(driver.begin());
+        riderTime.erase(riderId);
+
         return {driverId,riderId};
     }
     
     void cancelRider(int riderId) {
-        activeRider[riderId]=false;
+        auto it=riderTime.find(riderId);
+        if(it !=riderTime.end()){
+            rider.erase({it->second,riderId});
+            riderTime.erase(it);
+        }
     }
 };
 
